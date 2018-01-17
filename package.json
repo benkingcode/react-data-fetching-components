@@ -35,6 +35,16 @@
     "type": "git",
     "url": "git+https://github.com/dbbk/react-data-fetching-components.git"
   },
+  "keywords": [
+    "react",
+    "reactjs",
+    "fetch",
+    "data",
+    "ssr",
+    "ajax",
+    "getInitialData",
+    "getInitialProps"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dbbk/react-data-fetching-components/issues"
