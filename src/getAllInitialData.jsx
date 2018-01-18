@@ -26,7 +26,7 @@ class TreeWalking extends React.Component {
   }
 }
 
-export default async function getAllInitialData(app) {
+export default function getAllInitialData(app) {
   const dataResolved = {};
   const dataPromises = {};
 
@@ -49,9 +49,9 @@ export default async function getAllInitialData(app) {
     return true;
   }
 
-  await reactTreeWalker(<TreeWalking>{app}</TreeWalking>, visitor);
-
-  const dataPromisesResolved = await allParams(dataPromises);
-
-  return { ...dataResolved, ...dataPromisesResolved };
+  return reactTreeWalker(<TreeWalking>{app}</TreeWalking>, visitor)
+    .then(() => allParams(dataPromises))
+    .then(dataPromisesResolved => {
+      return { ...dataResolved, ...dataPromisesResolved };
+    });
 }

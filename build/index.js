@@ -1579,6 +1579,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+exports.default = getAllInitialData;
+
 var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
@@ -1592,8 +1594,6 @@ var _reactTreeWalker = __webpack_require__(16);
 var _reactTreeWalker2 = _interopRequireDefault(_reactTreeWalker);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1640,44 +1640,35 @@ var TreeWalking = function (_React$Component) {
 TreeWalking.childContextTypes = {
   treeWalking: _propTypes2.default.bool.isRequired
 };
+function getAllInitialData(app) {
+  var dataResolved = {};
+  var dataPromises = {};
 
-exports.default = function () {
-  var _ref = _asyncToGenerator(function* (app) {
-    var dataResolved = {};
-    var dataPromises = {};
-
-    function visitor(element, instance, context) {
-      if (instance && 'fetchData' in instance && typeof instance.fetchData === 'function') {
-        if (instance.getInitialDataInParallel) {
-          dataPromises[instance.componentDataStoreId] = instance.fetchData();
-        } else {
-          return instance.fetchData().then(function (data) {
-            dataResolved[instance.componentDataStoreId] = data;
-            return true;
-          });
-        }
+  function visitor(element, instance, context) {
+    if (instance && 'fetchData' in instance && typeof instance.fetchData === 'function') {
+      if (instance.getInitialDataInParallel) {
+        dataPromises[instance.componentDataStoreId] = instance.fetchData();
+      } else {
+        return instance.fetchData().then(function (data) {
+          dataResolved[instance.componentDataStoreId] = data;
+          return true;
+        });
       }
-
-      return true;
     }
 
-    yield (0, _reactTreeWalker2.default)(_react2.default.createElement(
-      TreeWalking,
-      null,
-      app
-    ), visitor);
-
-    var dataPromisesResolved = yield allParams(dataPromises);
-
-    return _extends({}, dataResolved, dataPromisesResolved);
-  });
-
-  function getAllInitialData(_x) {
-    return _ref.apply(this, arguments);
+    return true;
   }
 
-  return getAllInitialData;
-}();
+  return (0, _reactTreeWalker2.default)(_react2.default.createElement(
+    TreeWalking,
+    null,
+    app
+  ), visitor).then(function () {
+    return allParams(dataPromises);
+  }).then(function (dataPromisesResolved) {
+    return _extends({}, dataResolved, dataPromisesResolved);
+  });
+}
 
 /***/ }),
 /* 16 */
