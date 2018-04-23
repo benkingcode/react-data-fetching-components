@@ -2,7 +2,7 @@ This package allows you to add a `getInitialData` method to your React component
 
 # Installation
 
-`yarn install react-data-fetching-components`
+`yarn add react-data-fetching-components`
 
 # Usage
 
